@@ -24,7 +24,11 @@ public class MemoServiceImpl implements MemoService{
 
     @Override
     public Memo read(Memo m) {
-        return null;
+        MemoEntity memoEntity = memoRepository.getById(m.getMno());
+        Memo result = new Memo();
+        result.setMno((memoEntity.getMno()));
+        result.setMemoText(memoEntity.getMemoText());
+        return result;
     }
 
     @Override

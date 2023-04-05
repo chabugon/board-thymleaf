@@ -8,6 +8,7 @@ import idusw.springboot.boardthymleaf.service.MemoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,17 +17,16 @@ import java.util.stream.IntStream;
 @Controller
 public class HomeController {
     MemoService memoService;
-    public HomeController(MemoService memoService){
+    public HomeController(MemoService memoService) { // constructor DI
         this.memoService = memoService;
     }
-     /*
+
+    /*
     @Autowired
-    MemoRepository memoRepository; //DI (Dependency Injection)
-      */
-    @Autowired
-    MemoRepository memoRepository;
+    MemoRepository memoRepository; // field DI (Dependency Injection)
+    */
     @GetMapping("/init")
-    public String goHome(){
+    public String goHome() {
         memoService.initailize();
         return "index";
     }
@@ -37,5 +37,15 @@ public class HomeController {
         result = memoService.readList(); // 서비스 객체의 메소드를 호출하여 업무를 처리한다.
         model.addAttribute("memoList", result); // 처리된 결과를 전달하기 위해 model 객체의 속성으로 지정
         return "list"; // view 이름
+    }
+
+    @GetMapping("/memo/{mno}")
+    public String getMemoList(@PathVariable("mno") Long mno, Model model) {
+        Memo result = new Memo();
+        Memo memo = new Memo();
+        memo.setMno(mno);
+        result = memoService.read(memo);
+        model.addAttribute("memo", result); // 처리된 결과를 전달하기 위해 model 객체의 속성으로 지정
+        return "one"; // view 이름
     }
 }
